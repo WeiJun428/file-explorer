@@ -2,7 +2,7 @@
   "name": "file-explorer",
   "version": "1.0.0",
   "description": "This is a file explorer intended to be used by educators in Malaysia.",
-  "main": "main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
