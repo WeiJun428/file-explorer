@@ -4,8 +4,6 @@
 
 "use strict";
 
-const fs = require("fs").promises;
-
 (function() {
   window.addEventListener("load", init);
 
@@ -13,8 +11,7 @@ const fs = require("fs").promises;
   * Initialize the interative elements once the window is loaded.
   */
   function init() {
-    let file = await fs.readFile("styles.css", "utf8");
-    id("console").textContent = "file";
+    // id("console").textContent = "file";
   }
 
   /**

@@ -4,7 +4,7 @@
 
 "use strict";
 
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 app.on("ready", createWindow);
@@ -28,7 +28,8 @@ function createWindow () {
     height: 500,
     // fullscreen: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: false,
+      preload: require.resolve("./preload.js")
     }
   });
 
