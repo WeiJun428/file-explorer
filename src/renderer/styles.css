@@ -1,0 +1,10 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+footer {
+  padding-left: 1em;
+  position: fixed;
+  bottom: 1.5%;
+  color: black;
+}
