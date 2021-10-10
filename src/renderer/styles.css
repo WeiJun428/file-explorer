@@ -2,9 +2,25 @@
   font-family: 'Roboto', sans-serif;
 }
 
+body {
+  margin: 0;
+}
+
 footer {
   padding-left: 1em;
   position: fixed;
   bottom: 1.5%;
   color: black;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+}
+
+#title-bar {
+  width: 100%;
+  padding: 1em 2em;
+  justify-content: flex-start;
+  background-color: white;
 }
