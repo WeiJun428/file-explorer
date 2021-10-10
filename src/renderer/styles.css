@@ -14,13 +14,31 @@ footer {
 }
 
 nav {
-  display: flex;
   flex-direction: row;
 }
 
-#title-bar {
-  width: 100%;
-  padding: 1em 2em;
-  justify-content: flex-start;
-  background-color: white;
+h1 {
+  font-size: 1.6em;
+  font-weight: bold;
+  float: left;
+  color: white;
+  padding-bottom: 0.3em;
+}
+
+.flex {
+  display: flex;
+}
+
+header {
+  top: 0;
+  position: sticky;
+  height: 10vh;
+  justify-content: space-between;
+  padding: 0.3em 1.2em;
+  background-color: #253237;
+  align-items: center;
+}
+
+#setting {
+  float: right;
 }
