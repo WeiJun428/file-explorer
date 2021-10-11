@@ -9,7 +9,7 @@
     <meta name="description" content="This file explorer provides simplified navigation to users">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
 
     <!-- Fonts -->
@@ -24,15 +24,23 @@
   </head>
 
   <body>
-    <header class="flex">
-      <h1>AppName</h1>
-      <button type="button" id="setting" class="btn btn-outline-light">Setting</button>
-    </header>
-    <nav class="flex">
-      <button id="back">Back</button>
-      <p>Current directory: <span id="address"></span></p>
+    <nav class="navbar navbar-light bg-light sticky-top" role="navigation">
+      <a class="navbar-brand" href="#">File Explorer</a>
+      <a class="nav-link" href="#" id="setting-btn">Setting</a>
     </nav>
-    <p id="console"></p>
+    <main>
+      <section id="main-page">
+        <nav aria-label="breadcrumb" id="address" role="navigation">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"><a href="#">Home</a></li>
+          </ol>
+        </nav>
+        <div class="d-flex flex-row container"></div>
+      </section>
+      <section id="setting-page" class="hidden">
+        <input type="password">
+      </section>
+    </main>
     <footer>&copy; 2021 - Wei Jun Tan</footer>
   </body>
 </html>

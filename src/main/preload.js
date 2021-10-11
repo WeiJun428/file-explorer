@@ -4,32 +4,48 @@
 
 const fs = require("fs").promises;
 const path = require("path");
-const FILE = "/../..";
+const FILE = "C:/Users/alext/Desktop/";
 
 "use strict";
 
-(function() {
+(async function() {
   window.addEventListener("load", init);
 
   /**
   * Initializes the interative elements once the window is loaded.
   */
-  function init() {
-    let btn = gen("button");
-    qs("body").appendChild(btn);
-    btn.addEventListener("click", haha);
+  async function init() {
+    getFile(FILE);
   }
 
-  async function haha() {
+  async function getFile(fileName) {
     try {
-      const files = await fs.readdir(path.join(__dirname, FILE));
+      const files = await fs.readdir(fileName);
+      qs(".container").innerHTML = "";
       for (const file of files) {
-        let p = gen("p"); p.textContent = file; qs("body").appendChild(p);
+        let p = genCard(file, file);
+        p.addEventListener("click", () => {
+          getFile(FILE + p.id + "/");
+        });
+        qs(".container").appendChild(p);
       }
     } catch (err) {
       console.log("haha");
     }
-    id("console").textContent = "file";
+  }
+
+  function genCard(id, name) {
+    let div1 = gen("div");
+    div1.classList.add("card");
+    let div2 = gen("div");
+    div2.classList.add("card-body");
+    let title = gen("h2");
+    title.classList.add("card-title");
+    title.textContent = name;
+    div2.appendChild(title);
+    div1.appendChild(div2);
+    div1.id = id;
+    return div1;
   }
 
   /**

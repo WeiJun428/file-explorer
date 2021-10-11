@@ -11,7 +11,12 @@
   * Initialize the interative elements once the window is loaded.
   */
   function init() {
-    // id("console").textContent = "file";
+    id("setting-btn").addEventListener("click", toggleView);
+  }
+
+  function toggleView() {
+    id("main-page").classList.toggle("hidden");
+    id("setting-page").classList.toggle("hidden");
   }
 
   /**

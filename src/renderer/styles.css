@@ -1,9 +1,15 @@
-* {
-  font-family: 'Roboto', sans-serif;
+@keyframes fade-in {
+  from {
+    opacity: 0.7;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 body {
-  margin: 0;
+  scroll-behavior: smooth;
 }
 
 footer {
@@ -13,32 +19,36 @@ footer {
   color: black;
 }
 
+.hidden {
+  display: none;
+}
+
+.container {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 15rem;
+  height: 10rem;
+  margin: 1rem;
+  animation: fade-in 0.8s ease-in;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+body {
+  margin-bottom: 5vh;
+}
+
 nav {
-  flex-direction: row;
+  height: 3rem;
 }
 
-h1 {
-  font-size: 1.6em;
-  font-weight: bold;
-  float: left;
-  color: white;
-  padding-bottom: 0.3em;
-}
-
-.flex {
-  display: flex;
-}
-
-header {
-  top: 0;
+#address {
   position: sticky;
-  height: 10vh;
-  justify-content: space-between;
-  padding: 0.3em 1.2em;
-  background-color: #253237;
-  align-items: center;
-}
-
-#setting {
-  float: right;
+  top: 3rem;
+  z-index: 1;
 }
