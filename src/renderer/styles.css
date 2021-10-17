@@ -8,10 +8,6 @@
   }
 }
 
-body {
-  scroll-behavior: smooth;
-}
-
 footer {
   padding-left: 1em;
   position: fixed;
@@ -40,15 +36,26 @@ footer {
 }
 
 body {
-  margin-bottom: 5vh;
+  margin-bottom: 3vh;
 }
 
 nav {
-  height: 3rem;
+  min-height: 4rem;
 }
 
 #address {
   position: sticky;
-  top: 3rem;
+  /* top: 3rem; */
   z-index: 1;
+}
+
+section {
+  height: 80vh;
+  width: 100%;
+}
+
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+  min-width: 30vw;
 }

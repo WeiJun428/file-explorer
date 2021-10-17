@@ -11,13 +11,13 @@
   * Initialize the interative elements once the window is loaded.
   */
   function init() {
-    id("setting-btn").addEventListener("click", toggleView);
+    // id("setting-btn").addEventListener("click", toggleView);
   }
 
-  function toggleView() {
-    id("main-page").classList.toggle("hidden");
-    id("setting-page").classList.toggle("hidden");
-  }
+  // function toggleView() {
+  //   id("main-page").classList.add("hidden");
+  //   id("setting-page").classList.remove("hidden");
+  // }
 
   /**
   * Returns the element that has the ID attribute with the specified value.
