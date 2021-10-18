@@ -4,7 +4,8 @@
 
 const fs = require("fs").promises;
 const path = require("path");
-const FILE = "C:/Users/alext/Desktop/";
+const FILE = "src/others/temp.txt";
+let home;
 
 "use strict";
 
@@ -15,7 +16,24 @@ const FILE = "C:/Users/alext/Desktop/";
   * Initializes the interative elements once the window is loaded.
   */
   async function init() {
-    getFile(FILE);
+    qs("nav > div > div > form").addEventListener("submit", (param) => {
+      param.preventDefault();
+      updateAddress();
+    });
+    getHome();
+  }
+
+  async function getHome() {
+    try {
+      const data = await fs.readFile(FILE, "utf-8");
+      if (data !== "") {
+        home = data;
+        getFile(home);
+      }
+      id("test").textContent = "not set yet";
+    } catch (err) {
+      id("test").textContent = err;
+    }
   }
 
   async function getFile(fileName) {
@@ -33,6 +51,16 @@ const FILE = "C:/Users/alext/Desktop/";
       console.log("haha");
     }
   }
+
+  function updateAddress() {
+    let password = id("password-input").value;
+    let address = id("addr-input").value;
+    // check address is valid
+    // TODO: if success, write to the file and refresh
+    // else: give error to the console
+    id("upd-result").textContent = "Success";
+  }
+  // TODO: check address. if dir, success.
 
   function genCard(id, name) {
     let div1 = gen("div");
