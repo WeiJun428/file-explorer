@@ -2,10 +2,16 @@
  * This is preload.js.
  */
 
+// Dependencies
 const fs = require("fs").promises;
 const path = require("path");
-const FILE = "src/others/temp.txt";
-let home;
+
+const DELAY = 2000;                  // Duration of message
+const HVAL = 2225039093;             // Hash value of password
+const FILE = "src/others/temp.txt";  // Where root is stored
+let root;                            // Root of the explorer
+let cur_dir;                         // Current directory
+
 
 "use strict";
 
@@ -13,55 +19,144 @@ let home;
   window.addEventListener("load", init);
 
   /**
-  * Initializes the interative elements once the window is loaded.
-  */
-  async function init() {
-    qs("nav > div > div > form").addEventListener("submit", (param) => {
-      param.preventDefault();
-      updateAddress();
-    });
-    getHome();
+   * Debug purpose. Print the message to the webpage
+   */
+  Print = (str) => {
+    id("test").textContent += str;
   }
 
-  async function getHome() {
+  /**
+   * Called when window is loaded
+   */
+  async function init() {
+    // Activate form update
+    qs("form").addEventListener("submit", (param) => {
+      param.preventDefault();
+      updateRoot();
+    });
+
+    // Set the root
+    await setRoot();
+
+    id("home").addEventListener("click", () => {
+      populateDir(root);
+    });
+  }
+
+  /**
+   * Set the root of the file.
+   */
+  async function setRoot() {
     try {
       const data = await fs.readFile(FILE, "utf-8");
-      if (data !== "") {
-        home = data;
-        getFile(home);
+      // Empty string implies unset root
+      if (data.length === 0) {
+        id("test").textContent += "not set yet";
+      } else if (await isDir(data)) {
+        root = data;
+        populateDir(root);
       }
-      id("test").textContent = "not set yet";
     } catch (err) {
-      id("test").textContent = err;
+      Print (err);
     }
   }
 
-  async function getFile(fileName) {
-    try {
-      const files = await fs.readdir(fileName);
-      qs(".container").innerHTML = "";
-      for (const file of files) {
-        let p = genCard(file, file);
-        p.addEventListener("click", () => {
-          getFile(FILE + p.id + "/");
-        });
-        qs(".container").appendChild(p);
-      }
-    } catch (err) {
-      console.log("haha");
-    }
-  }
-
-  function updateAddress() {
+  async function updateRoot() {
     let password = id("password-input").value;
-    let address = id("addr-input").value;
-    // check address is valid
-    // TODO: if success, write to the file and refresh
-    // else: give error to the console
-    id("upd-result").textContent = "Success";
-  }
-  // TODO: check address. if dir, success.
+    let address = fmt(id("addr-input").value);
 
+    // Validate Password
+    if (!isPassword(password)) {
+      id("upd-result").textContent = "Incorrect Password";
+      setTimeout(() => {
+        id("upd-result").textContent = "";
+      }, DELAY);
+      return;
+    }
+
+    // Validate address
+    if (!await isDir(address)) {
+      id("upd-result").textContent = "Invalid address";
+      setTimeout(() => {
+        id("upd-result").textContent = "";
+      }, DELAY);
+      return;
+    }
+
+    // Avoid malicious relative address
+    if (!path.isAbsolute(address)) {
+      id("upd-result").textContent = "Not an absolute address";
+      setTimeout(() => {
+        id("upd-result").textContent = "";
+      }, DELAY);
+      return;
+    }
+
+    // Overwrite old file
+    await fs.writeFile(FILE, address, {flag: 'w+'}, err => {
+      Print(err);
+    })
+
+    // Output success message
+    id("upd-result").style.color = "green";
+    id("upd-result").textContent = "Success. Reload in 2 seconds";
+
+    // Reload the page
+    setTimeout(() => {
+      location.reload();
+    }, DELAY);
+  }
+
+  async function populateDir(file) {
+    file = fmt(file);
+    if (!isDir(file)) {
+      return;
+    }
+
+    try {
+      const files = await fs.readdir(file);
+
+      // Clear the old container
+      qs(".container").innerHTML = "";
+
+      for (const f of files) {
+        let pth = path.join(file, f);
+        let card = genCard(pth, f);
+        if (await isDir(pth)) {
+          card.addEventListener("click", () => {
+            populateDir(pth);
+          });
+          qs(".container").appendChild(card);
+        }
+        else if (isPdf(pth)) {
+          card.addEventListener("click", () => {
+            openPdf(pth);
+          });
+          qs(".container").appendChild(card);
+        }
+        cur_dir = pth;
+      }
+      updateNav();
+    } catch (err) {
+      Print(err);
+    }
+  }
+
+  function openPdf() {
+    Print("open pdf");
+  }
+
+  // TODO: Make the nav bar clickable
+  function updateNav() {
+
+  }
+
+  /**
+   * Returns a card element
+   * @param {string} id id of card
+   * @param {string} name filename
+   * @returns a card element
+   */
   function genCard(id, name) {
     let div1 = gen("div");
     div1.classList.add("card");
@@ -74,6 +169,59 @@ let home;
     div1.appendChild(div2);
     div1.id = id;
     return div1;
+  }
+
+  /**
+   * Returns true if file is pdf
+   * @param {path} file file to be checked
+   * @returns true if file is a pdf
+   */
+  function isPdf(file) {
+    let ext = path.extname(file);
+    return ext === ".pdf";
+  }
+
+  /**
+   * Returns true if file is directory
+   * @param {path} file filename to be checked
+   * @returns true if file is directory
+   */
+  async function isDir(file) {
+    try {
+      let stat = await fs.stat(file);
+      if (stat.isDirectory()) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      Print(err);
+      return false;
+    }
+  }
+
+  /**
+   * Normalize the file path
+   * @param {string} file string to be formatted
+   * @returns formatted path
+   */
+  function fmt(file) {
+    return path.normalize(file);
+  }
+
+  /**
+   * Check the correctness of password
+   * @param {string} password password to be checked
+   * @returns true if password is correct
+   */
+  function isPassword(password) {
+    let hval = 0x811c9dc5;
+    for (let i = 0; i < password.length; i++) {
+      hval ^= (password.charCodeAt(i) & 0xFF);
+      hval += (hval << 1) + (hval << 4) + (hval << 7) +
+              (hval << 8) + (hval << 24);
+    }
+    return (hval >>> 0) === HVAL;
   }
 
   /**
