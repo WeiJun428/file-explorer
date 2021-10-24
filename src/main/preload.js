@@ -10,7 +10,7 @@ const DELAY = 2000;                  // Duration of message
 const HVAL = 2225039093;             // Hash value of password
 const FILE = "src/others/temp.txt";  // Where root is stored
 let root;                            // Root of the explorer
-let cur_dir;                         // Current directory
+let curDir;                         // Current directory
 
 
 "use strict";
@@ -44,11 +44,12 @@ let cur_dir;                         // Current directory
    */
   async function setRoot() {
     try {
-      const data = await fs.readFile(FILE, "utf-8");
+      const data = fmt(await fs.readFile(FILE, "utf-8"));
       // Empty string implies unset root
       if (data.length === 0) {
         id("test").textContent += "not set yet";
-      } else if (await isDir(data)) {
+      } else if (await isDir(data) && path.isAbsolute(data)) {
+        // Set the root only when the directory is valid and absolute
         root = data;
         populateDir(root);
       }
@@ -103,8 +104,12 @@ let cur_dir;                         // Current directory
     }, DELAY);
   }
 
+  /**
+   * populates the container with clickable cards
+   * @param {string} file filename
+   * @returns nothing
+   */
   async function populateDir(file) {
-    Print(file + " ");
     file = fmt(file);
     if (!await isDir(file)) {
       return;
@@ -116,23 +121,25 @@ let cur_dir;                         // Current directory
       // Clear the old container
       qs(".container").innerHTML = "";
 
+      // Iterate through the file
       for (const f of files) {
         let pth = path.join(file, f);
         let card = genCard(pth, f);
-        if (await isDir(pth)) {
+        // Insert the card if it is dir or pdf
+        if (await isDir(pth) && path.isAbsolute(pth)) {
           card.addEventListener("click", () => {
             populateDir(pth);
           });
           qs(".container").appendChild(card);
-        }
-        else if (isPdf(pth)) {
+        } else if (isPdf(pth)) {
           card.addEventListener("click", () => {
             openPdf(pth);
           });
           qs(".container").appendChild(card);
         }
       }
-      cur_dir = file;
+      // Update the navigation
+      curDir = file;
       await updateNav();
     } catch (err) {
       Print(err);
@@ -145,7 +152,7 @@ let cur_dir;                         // Current directory
 
   // TODO: To be fixed
   async function updateNav() {
-    if (!await isDir(cur_dir)) {
+    if (!await isDir(curDir)) {
       Print("error on navbar");
     }
 
@@ -155,9 +162,9 @@ let cur_dir;                         // Current directory
     let elem = [];
     let i = 0;
 
-    for (let cur = cur_dir; cur != root; i++) {
+    for (let cur = curDir; cur != root; i++) {
       elem[i] = getBreadCrumb(path.basename(cur), i === 0);
-      addEvent(elem[i], cur);
+      add(elem[i], cur);
       cur = path.dirname(cur);
     }
 
