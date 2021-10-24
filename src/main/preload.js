@@ -108,8 +108,9 @@ let cur_dir;                         // Current directory
   }
 
   async function populateDir(file) {
+    Print(file + " ");
     file = fmt(file);
-    if (!isDir(file)) {
+    if (!await isDir(file)) {
       return;
     }
 
@@ -134,8 +135,8 @@ let cur_dir;                         // Current directory
           });
           qs(".container").appendChild(card);
         }
-        cur_dir = pth;
       }
+      cur_dir = file;
       updateNav();
     } catch (err) {
       Print(err);
@@ -146,9 +147,56 @@ let cur_dir;                         // Current directory
     Print("open pdf");
   }
 
-  // TODO: Make the nav bar clickable
-  function updateNav() {
+  // TODO: To be fixed
+  async function updateNav() {
+    let addr = cur_dir;
+    if (!await isDir(addr)) {
+      Print("error on navbar");
+    }
 
+    // Clean the nav
+    qs(".breadcrumb").innerHTML = "";
+
+    let elem = [];
+    let i = 0;
+
+    for (; path.relative(addr, root).length !== 0; i++) {
+      elem[i] = getBreadCrumb(path.basename(addr), i === 0);
+      elem[i].addEventListener("click", () => {
+        populateDir(addr);
+      });
+      addr = path.dirname(addr);
+    }
+
+    elem[i] = getBreadCrumb("Home", i === 0);
+    elem[i].addEventListener("click", () => {
+      populateDir(root);
+    })
+
+    for (; i >= 0; i--) {
+      qs(".breadcrumb").appendChild(elem[i]);
+    }
+  }
+
+  /**
+   * Returns a breadcrumb.
+   * @param {string} label label of link
+   * @returns a breadcrumb item with given label
+   */
+  function getBreadCrumb(label, isCurrent) {
+    let li = gen("li");
+    li.classList.add("breadcrumb-item");
+    if (!isCurrent) {
+      let a = gen("a");
+      a.href = "#";
+      a.textContent = label;
+      li.appendChild(a);
+    } else {
+      li.classList.add("active");
+      li.ariaCurrent = "page";
+      li.textContent = label;
+    }
+    return li;
   }
 
   /**
