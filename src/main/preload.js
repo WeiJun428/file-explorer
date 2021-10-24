@@ -37,10 +37,6 @@ let cur_dir;                         // Current directory
 
     // Set the root
     await setRoot();
-
-    id("home").addEventListener("click", () => {
-      populateDir(root);
-    });
   }
 
   /**
@@ -137,7 +133,7 @@ let cur_dir;                         // Current directory
         }
       }
       cur_dir = file;
-      updateNav();
+      await updateNav();
     } catch (err) {
       Print(err);
     }
@@ -149,8 +145,7 @@ let cur_dir;                         // Current directory
 
   // TODO: To be fixed
   async function updateNav() {
-    let addr = cur_dir;
-    if (!await isDir(addr)) {
+    if (!await isDir(cur_dir)) {
       Print("error on navbar");
     }
 
@@ -160,22 +155,26 @@ let cur_dir;                         // Current directory
     let elem = [];
     let i = 0;
 
-    for (; path.relative(addr, root).length !== 0; i++) {
-      elem[i] = getBreadCrumb(path.basename(addr), i === 0);
-      elem[i].addEventListener("click", () => {
-        populateDir(addr);
-      });
-      addr = path.dirname(addr);
+    for (let cur = cur_dir; cur != root; i++) {
+      elem[i] = getBreadCrumb(path.basename(cur), i === 0);
+      addEvent(elem[i], cur);
+      cur = path.dirname(cur);
     }
 
-    elem[i] = getBreadCrumb("Home", i === 0);
+    elem[i] = getBreadCrumb("Home", false);
     elem[i].addEventListener("click", () => {
       populateDir(root);
-    })
+    });
 
     for (; i >= 0; i--) {
       qs(".breadcrumb").appendChild(elem[i]);
     }
+  }
+
+  function add(elem, addr) {
+    elem.addEventListener("click", () => {
+      populateDir(fmt(addr));
+    });
   }
 
   /**
