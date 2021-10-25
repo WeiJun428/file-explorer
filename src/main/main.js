@@ -36,8 +36,9 @@ app.on('second-instance', () => {
 function createWindow () {
   win = new BrowserWindow({
     show: false,
-    width: 500,
-    height: 500,
+    // width: 500,
+    // height: 500,
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: false,
       preload: require.resolve("./preload.js")

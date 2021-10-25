@@ -6,12 +6,11 @@
 const fs = require("fs").promises;
 const path = require("path");
 
+// Global variables
 const DELAY = 2000;                  // Duration of message
 const HVAL = 2225039093;             // Hash value of password
 const FILE = "src/others/temp.txt";  // Where root is stored
 let root;                            // Root of the explorer
-let curDir;                         // Current directory
-
 
 "use strict";
 
@@ -19,7 +18,7 @@ let curDir;                         // Current directory
   window.addEventListener("load", init);
 
   /**
-   * Debug purpose. Print the message to the webpage
+   * Debug purpose. Print the error message to the webpage
    */
   Print = (str) => {
     id("test").textContent += str;
@@ -41,51 +40,40 @@ let curDir;                         // Current directory
 
   /**
    * Set the root of the file.
+   * If it is not set yet, instruct user to set it up in setting
    */
   async function setRoot() {
     try {
       const data = fmt(await fs.readFile(FILE, "utf-8"));
-      // Empty string implies unset root
-      if (data.length === 0) {
-        id("test").textContent += "not set yet";
-      } else if (await isDir(data) && path.isAbsolute(data)) {
-        // Set the root only when the directory is valid and absolute
+
+      if (await isDir(data)) {  // Valid root
         root = data;
         populateDir(root);
+      } else {  // Invalid root or not set yet
+        Print("Please set the root by clicking setting at the upper right corner");
       }
     } catch (err) {
-      Print (err);
+      Print(err);
     }
   }
 
+  /**
+   * Update the root of the explorer if it is valid.
+   * If root is updated, the window will be reloaded in 2 sec
+   */
   async function updateRoot() {
     let password = id("password-input").value;
     let address = fmt(id("addr-input").value);
 
     // Validate Password
     if (!isPassword(password)) {
-      id("upd-result").textContent = "Incorrect Password";
-      setTimeout(() => {
-        id("upd-result").textContent = "";
-      }, DELAY);
+      updateRootMessage("Incorrect Password");
       return;
     }
 
     // Validate address
     if (!await isDir(address)) {
-      id("upd-result").textContent = "Invalid address";
-      setTimeout(() => {
-        id("upd-result").textContent = "";
-      }, DELAY);
-      return;
-    }
-
-    // Avoid malicious relative address
-    if (!path.isAbsolute(address)) {
-      id("upd-result").textContent = "Not an absolute address";
-      setTimeout(() => {
-        id("upd-result").textContent = "";
-      }, DELAY);
+      updateRootMessage("Invalid address");
       return;
     }
 
@@ -96,7 +84,7 @@ let curDir;                         // Current directory
 
     // Output success message
     id("upd-result").style.color = "green";
-    id("upd-result").textContent = "Success. Reload in 2 seconds";
+    updateRootMessage("Success. Reload in 2 seconds");
 
     // Reload the page
     setTimeout(() => {
@@ -105,9 +93,19 @@ let curDir;                         // Current directory
   }
 
   /**
-   * populates the container with clickable cards
+   * Print a message to indicate sattus of root setting
+   * @param {string} msg message to be printed
+   */
+  function updateRootMessage(msg) {
+    id("upd-result").textContent = msg;
+    setTimeout(() => {
+      id("upd-result").textContent = "";
+    }, DELAY);
+  }
+
+  /**
+   * Populates the container with clickable cards
    * @param {string} file filename
-   * @returns nothing
    */
   async function populateDir(file) {
     file = fmt(file);
@@ -126,7 +124,7 @@ let curDir;                         // Current directory
         let pth = path.join(file, f);
         let card = genCard(pth, f);
         // Insert the card if it is dir or pdf
-        if (await isDir(pth) && path.isAbsolute(pth)) {
+        if (await isDir(pth)) {
           card.addEventListener("click", () => {
             populateDir(pth);
           });
@@ -139,19 +137,23 @@ let curDir;                         // Current directory
         }
       }
       // Update the navigation
-      curDir = file;
-      await updateNav();
+      await updateNav(file);
     } catch (err) {
       Print(err);
     }
   }
 
-  function openPdf() {
-    Print("open pdf");
+  function openPdf(file) {
+    qs("main").classList.add("hidden");
+    qs("embed").classList.remove("hidden");
+    qs("embed").src = file;
   }
 
-  // TODO: To be fixed
-  async function updateNav() {
+  /**
+   * Update the navigation bar (breadcrumb)
+   * @param {string} curDir current directory name
+   */
+  async function updateNav(curDir) {
     if (!await isDir(curDir)) {
       Print("error on navbar");
     }
@@ -231,8 +233,7 @@ let curDir;                         // Current directory
    * @returns true if file is a pdf
    */
   function isPdf(file) {
-    let ext = path.extname(file);
-    return ext === ".pdf";
+    return path.extname(file) === ".pdf";
   }
 
   /**
@@ -243,13 +244,8 @@ let curDir;                         // Current directory
   async function isDir(file) {
     try {
       let stat = await fs.stat(file);
-      if (stat.isDirectory()) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      Print(err);
+      return stat.isDirectory() && path.isAbsolute(file);
+    } catch {
       return false;
     }
   }
