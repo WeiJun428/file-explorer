@@ -17,6 +17,7 @@
     "electron": "^15.1.0"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "fs": "0.0.1-security"
   }
 }

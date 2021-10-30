@@ -3,6 +3,7 @@
  */
 
 // Dependencies
+const shell = require('electron').shell;
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -132,7 +133,7 @@ let root;                            // Root of the explorer
           qs(".container").appendChild(card);
         } else if (isPdf(pth)) {
           card.addEventListener("click", () => {
-            openPdf(pth);
+            shell.openPath(pth);
           });
           qs(".container").appendChild(card);
         }
@@ -143,12 +144,6 @@ let root;                            // Root of the explorer
     } catch (err) {
       Print(err);
     }
-  }
-
-  function openPdf(file) {
-    qs("main").classList.add("hidden");
-    qs("embed").classList.remove("hidden");
-    qs("embed").src = file;
   }
 
   /**
