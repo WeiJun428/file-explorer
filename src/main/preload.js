@@ -118,6 +118,7 @@ let root;                            // Root of the explorer
 
       // Clear the old container
       qs(".container").innerHTML = "";
+      qs(".container").classList.add("hidden");
 
       // Iterate through the file
       for (const f of files) {
@@ -138,6 +139,7 @@ let root;                            // Root of the explorer
       }
       // Update the navigation
       await updateNav(file);
+      qs(".container").classList.remove("hidden");
     } catch (err) {
       Print(err);
     }
@@ -170,10 +172,13 @@ let root;                            // Root of the explorer
       cur = path.dirname(cur);
     }
 
-    elem[i] = getBreadCrumb("Home", false);
-    elem[i].addEventListener("click", () => {
-      populateDir(root);
-    });
+    elem[i] = getBreadCrumb("Home", i === 0);
+    add(elem[i], root);
+
+    if (i !== 0) {
+      elem[++i] = getBreadCrumb("Back", false);
+      add(elem[i], path.dirname(curDir));
+    }
 
     for (; i >= 0; i--) {
       qs(".breadcrumb").appendChild(elem[i]);

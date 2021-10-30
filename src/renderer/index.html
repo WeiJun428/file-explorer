@@ -23,10 +23,10 @@
 
   <body>
     <!--Main Nav bar with Appname and Setting button -->
-    <nav class="navbar navbar-light bg-light sticky-top align-items-center" role="navigation">
-      <h1 class="navbar-brand">APP</h1>
+    <nav id="nav1" class="navbar navbar-dark bg-dark sticky-top" role="navigation">
+      <h1 class="navbar-brand">Browser</h1>
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="setting-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="setting-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Setting
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="setting-btn">
@@ -47,7 +47,7 @@
     </nav>
 
     <!-- Main Display for file navigation along with a breadcrumb menu -->
-    <main>
+    <div>
       <section id="main-page">
         <nav aria-label="breadcrumb" id="address" role="navigation">
           <ol class="breadcrumb">
@@ -57,9 +57,12 @@
         <p id="test"></p>
         <div class="d-flex flex-row container"></div>
       </section>
-      <a href="C:\\Users\\alext\\Desktop\\Lecture 02 Scale_compressed.pdf" target="_blank" rel="noopener noreferrer" fullscreen="true">testing</a>
       <footer>&copy; 2021 - WJ</footer>
-    </main>
+    </div>
+
+    <div id="ahha"></div>
+    <p>haha</p>
+
     <!-- PDF Viewer -->
     <embed class="hidden" src="">
   </body>

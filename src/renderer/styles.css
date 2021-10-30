@@ -41,7 +41,7 @@ nav {
 }
 
 #address {
-  position: sticky;
+  /* position: sticky; */
   /* top: 3rem; */
   z-index: 1;
 }
@@ -67,3 +67,16 @@ embed {
   width: 100%;
   height: 95vh;
 }
+
+#nav1 {
+  top: 0;
+}
+
+/* body {
+  display: initial;
+  overflow: initial;
+} */
+
+/* #ahha {
+  height: 8000vh
+} */
