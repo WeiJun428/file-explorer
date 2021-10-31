@@ -21,13 +21,6 @@ let root;                            // Root of the explorer
   window.addEventListener("load", init);
 
   /**
-   * Debug purpose. Print the error message to the webpage
-   */
-  Print = (str) => {
-    id("test").textContent += str + "\t";
-  }
-
-  /**
    * Called when window is loaded
    */
   async function init() {
@@ -53,7 +46,7 @@ let root;                            // Root of the explorer
         root = data;
         populateDir(root);
       } else {  // Invalid root or not set yet
-        Print("Please set the root by clicking setting at the upper right corner");
+        Print("Please set the root in setting");
       }
     } catch (err) {
       Print(err);
@@ -324,6 +317,13 @@ let root;                            // Root of the explorer
               (hval << 8) + (hval << 24);
     }
     return (hval >>> 0) === HVAL;
+  }
+
+  /**
+   * Print the error message to the webpage
+   */
+  Print = (str) => {
+    id("test").textContent += str + "\t";
   }
 
   /**
