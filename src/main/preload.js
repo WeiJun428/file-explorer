@@ -10,7 +10,9 @@ const path = require("path");
 // Global variables
 const DELAY = 2000;                  // Duration of message
 const HVAL = 2225039093;             // Hash value of password
-const FILE = "src/others/temp.txt";  // Where root is stored
+const ROOT = "src/others/root.txt";  // Where root is stored
+const PDF = "src/others/pdf.txt";    // Where the most recent PDF is stored
+const STR_MAX = 30;                  // Maximum length of title for card
 let root;                            // Root of the explorer
 
 "use strict";
@@ -22,7 +24,7 @@ let root;                            // Root of the explorer
    * Debug purpose. Print the error message to the webpage
    */
   Print = (str) => {
-    id("test").textContent += str;
+    id("test").textContent += str + "\t";
   }
 
   /**
@@ -45,7 +47,7 @@ let root;                            // Root of the explorer
    */
   async function setRoot() {
     try {
-      const data = fmt(await fs.readFile(FILE, "utf-8"));
+      const data = fmt(await fs.readFile(ROOT, "utf-8"));
 
       if (await isDir(data)) {  // Valid root
         root = data;
@@ -79,7 +81,7 @@ let root;                            // Root of the explorer
     }
 
     // Overwrite old file
-    await fs.writeFile(FILE, address, {flag: 'w+'}, err => {
+    await fs.writeFile(ROOT, address, {flag: 'w+'}, err => {
       Print(err);
     })
 
@@ -121,10 +123,22 @@ let root;                            // Root of the explorer
       qs(".container").innerHTML = "";
       qs(".container").classList.add("hidden");
 
+      // Insert the most recent PDF if existed and if this is root
+      if (path.dirname(file) === path.dirname(root)) {
+        const pdf = fmt(await fs.readFile(PDF, "utf-8"));
+        if (isPdf(pdf)) {
+          let card = genCard(pdf, path.basename(pdf), true);
+          card.addEventListener("click", () => {
+            openPdf(pdf);
+          });
+          qs(".container").appendChild(card);
+        }
+      }
+
       // Iterate through the file
       for (const f of files) {
         let pth = path.join(file, f);
-        let card = genCard(pth, f);
+        let card = genCard(pth, f, false);
         // Insert the card if it is dir or pdf
         if (await isDir(pth)) {
           card.addEventListener("click", () => {
@@ -133,7 +147,7 @@ let root;                            // Root of the explorer
           qs(".container").appendChild(card);
         } else if (isPdf(pth)) {
           card.addEventListener("click", () => {
-            shell.openPath(pth);
+            openPdf(pth);
           });
           qs(".container").appendChild(card);
         }
@@ -144,6 +158,13 @@ let root;                            // Root of the explorer
     } catch (err) {
       Print(err);
     }
+  }
+
+  async function openPdf(name) {
+    await fs.writeFile(PDF, name, {flag: 'w+'}, err => {
+      Print(err);
+    });
+    shell.openPath(name);
   }
 
   /**
@@ -210,17 +231,48 @@ let root;                            // Root of the explorer
   /**
    * Returns a card element
    * @param {string} id id of card
-   * @param {string} name filename
+   * @param {string} filename filename
+   * @param {boolean} isRecent true if the file is most recently opened
    * @returns a card element
    */
-  function genCard(id, name) {
+  function genCard(id, filename, isRecent) {
+    // Generate elements
     let div1 = gen("div");
     div1.classList.add("card");
     let div2 = gen("div");
     div2.classList.add("card-body");
-    let title = gen("h2");
+    let title = gen("h1");
     title.classList.add("card-title");
-    title.textContent = name;
+    let badge = gen("span");
+    badge.classList.add("badge");
+
+    // Format the badge
+    if (path.extname(filename) === ".pdf") {
+      badge.textContent = "PDF";
+      badge.classList.add("badge-primary");
+    } else {
+      badge.textContent = "DIR";
+      badge.classList.add("badge-secondary");
+    }
+
+    // Format the title
+    let header = path.parse(id).name;
+    if (header.length > STR_MAX) {
+      header = header.substr(0, STR_MAX) + "...";
+    }
+    header += " ";
+    title.textContent = header;
+
+    title.appendChild(badge);
+
+    if (isRecent) {
+      let badge2 = gen("span");
+      badge2.classList.add("badge");
+      badge2.classList.add("badge-success");
+      badge2.textContent = "Recent";
+      title.appendChild(badge2);
+    }
+
     div2.appendChild(title);
     div1.appendChild(div2);
     div1.id = id;

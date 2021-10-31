@@ -8,6 +8,15 @@
   }
 }
 
+body {
+  padding-bottom: 4vh;
+  background-color: #f8f8f8;
+}
+
+h1 {
+  font-size: 1.6rem;
+}
+
 footer {
   font-size: 0.9em;
   padding-left: 1em;
@@ -16,12 +25,13 @@ footer {
   color: black;
 }
 
-main {
-  height: unset;
+img {
+  max-height: 10vh;
+  margin: 0;
 }
 
-h1 {
-  margin: 0;
+main {
+  height: unset;
 }
 
 .hidden {
@@ -42,6 +52,11 @@ h1 {
 
 .card:hover {
   cursor: pointer;
+  transform: scale(1.1);
+}
+
+.badge {
+  transform: scale(0.8);
 }
 
 .dropdown-menu-right {
@@ -62,4 +77,9 @@ h1 {
   margin-left: 1em;
   font-weight: bold;
   color: red;
+}
+
+#main-nav {
+  padding: 0 initial 0 0;
+  background-color: white;
 }
