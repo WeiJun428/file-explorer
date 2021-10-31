@@ -1,4 +1,11 @@
 /**
+ * Copyright ©2021 Wei Jun Tan.  All rights reserved. No other use,
+ * copying, distribution, or modification is permitted without prior
+ * written consent. Copyrights for third-party components of this work
+ * must be honored.
+ */
+
+/**
  * This is preload.js.
  */
 

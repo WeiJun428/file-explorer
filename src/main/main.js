@@ -1,4 +1,11 @@
 /**
+ * Copyright ©2021 Wei Jun Tan.  All rights reserved. No other use,
+ * copying, distribution, or modification is permitted without prior
+ * written consent. Copyrights for third-party components of this work
+ * must be honored.
+ */
+
+/**
  * This is the main process of the app File Explorer.
  */
 
@@ -36,7 +43,6 @@ app.on('second-instance', () => {
 function createWindow () {
   win = new BrowserWindow({
     show: false,
-    // fullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
