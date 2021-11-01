@@ -44,6 +44,7 @@ function createWindow () {
   win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
+    icon: path.join(__dirname, "../img/logo.png"),
     webPreferences: {
       nodeIntegration: false,
       preload: require.resolve("./preload.js")
@@ -56,4 +57,6 @@ function createWindow () {
   })
 
   win.loadFile(path.join(__dirname, "../renderer/index.html"));
+
+  win.maximize();
 };

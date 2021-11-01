@@ -15,17 +15,25 @@ const fs = require("fs").promises;
 const path = require("path");
 
 // Global variables
-const DELAY = 2000;                  // Duration of message
-const HVAL = 2225039093;             // Hash value of password
-const ROOT = "src/others/root.txt";  // Where root is stored
-const PDF = "src/others/pdf.txt";    // Where the most recent PDF is stored
-const STR_MAX = 30;                  // Maximum length of title for card
-let root;                            // Root of the explorer
+const DELAY    = 2000;            // Duration of message
+const HVAL     = 2225039093;      // Hash value of password
+const STR_MAX  = 30;              // Maximum length of title for card
+const ERR      = "System Error";  // Message to be printed when release
+const DEBUG    = true;            // True if in debug mode
+
+// File
+const ROOT     = path.join(__dirname, "../others/root.txt") // Where root is stored
+const PDF      = path.join(__dirname, "../others/pdf.txt")  // Where the recent PDF is stored
+
+let root;  // Root of the explorer
 
 "use strict";
 
 (async function() {
   window.addEventListener("load", init);
+  window.onscroll = function () {
+    scrollFunction();
+  };
 
   /**
    * Called when window is loaded
@@ -35,6 +43,12 @@ let root;                            // Root of the explorer
     qs("form").addEventListener("submit", (param) => {
       param.preventDefault();
       updateRoot();
+    });
+
+    // Activate Scroll to Top Button
+    id("btn-back-to-top").addEventListener("click", () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     });
 
     // Set the root
@@ -56,7 +70,7 @@ let root;                            // Root of the explorer
         Print("Please set the root in setting");
       }
     } catch (err) {
-      Print(err);
+      Print(DEBUG? err : ERR);
     }
   }
 
@@ -82,7 +96,7 @@ let root;                            // Root of the explorer
 
     // Overwrite old file
     await fs.writeFile(ROOT, address, {flag: 'w+'}, err => {
-      Print(err);
+      Print(DEBUG? err : ERR);
     })
 
     // Output success message
@@ -96,7 +110,8 @@ let root;                            // Root of the explorer
   }
 
   /**
-   * Print a message to indicate sattus of root setting
+   * Print a message to indicate status of root setting.
+   * Message disappeared after DELAY sec
    * @param {string} msg message to be printed
    */
   function updateRootMessage(msg) {
@@ -112,6 +127,8 @@ let root;                            // Root of the explorer
    */
   async function populateDir(file) {
     file = fmt(file);
+
+    // Do nothing if not a dir
     if (!await isDir(file)) {
       return;
     }
@@ -139,6 +156,7 @@ let root;                            // Root of the explorer
       for (const f of files) {
         let pth = path.join(file, f);
         let card = genCard(pth, f, false);
+
         // Insert the card if it is dir or pdf
         if (await isDir(pth)) {
           card.addEventListener("click", () => {
@@ -152,17 +170,22 @@ let root;                            // Root of the explorer
           qs(".container").appendChild(card);
         }
       }
+
       // Update the navigation
       await updateNav(file);
       qs(".container").classList.remove("hidden");
     } catch (err) {
-      Print(err);
+      Print(DEBUG? err : ERR);
     }
   }
 
+  /**
+   * Open the given pdf and update the most recent pdf
+   * @param {string} name filename of pdf
+   */
   async function openPdf(name) {
     await fs.writeFile(PDF, name, {flag: 'w+'}, err => {
-      Print(err);
+      Print(DEBUG? err : ERR);
     });
     shell.openPath(name);
   }
@@ -173,7 +196,7 @@ let root;                            // Root of the explorer
    */
   async function updateNav(curDir) {
     if (!await isDir(curDir)) {
-      Print("error on navbar");
+      Print(DEBUG? "Navbar error" : ERR);
     }
 
     // Clean the nav
@@ -182,15 +205,18 @@ let root;                            // Root of the explorer
     let elem = [];
     let i = 0;
 
+    // Setup subdir
     for (let cur = curDir; cur != root; i++) {
       elem[i] = getBreadCrumb(path.basename(cur), i === 0);
       add(elem[i], cur);
       cur = path.dirname(cur);
     }
 
+    // Setup root
     elem[i] = getBreadCrumb("Home", i === 0);
     add(elem[i], root);
 
+    // Setup back
     if (i !== 0) {
       elem[++i] = getBreadCrumb("Back", false);
       add(elem[i], path.dirname(curDir));
@@ -199,12 +225,6 @@ let root;                            // Root of the explorer
     for (; i >= 0; i--) {
       qs(".breadcrumb").appendChild(elem[i]);
     }
-  }
-
-  function add(elem, addr) {
-    elem.addEventListener("click", () => {
-      populateDir(fmt(addr));
-    });
   }
 
   /**
@@ -243,16 +263,13 @@ let root;                            // Root of the explorer
     div2.classList.add("card-body");
     let title = gen("h1");
     title.classList.add("card-title");
-    let badge = gen("span");
-    badge.classList.add("badge");
+    let badge;
 
     // Format the badge
     if (path.extname(filename) === ".pdf") {
-      badge.textContent = "PDF";
-      badge.classList.add("badge-primary");
+      badge = getBadge("PDF", "badge-primary");
     } else {
-      badge.textContent = "DIR";
-      badge.classList.add("badge-secondary");
+      badge = getBadge("Folder", "badge-secondary");
     }
 
     // Format the title
@@ -265,18 +282,47 @@ let root;                            // Root of the explorer
 
     title.appendChild(badge);
 
+    // Add extra badge if it is most recent
     if (isRecent) {
-      let badge2 = gen("span");
-      badge2.classList.add("badge");
-      badge2.classList.add("badge-success");
-      badge2.textContent = "Recent";
-      title.appendChild(badge2);
+      title.appendChild(getBadge("Recent", "badge-success"));
     }
 
     div2.appendChild(title);
     div1.appendChild(div2);
-    div1.id = id;
     return div1;
+  }
+
+  /**
+   * Control the visibility of the scroll-to-top button
+   */
+  function scrollFunction() {
+    if (document.body.scrollTop > 300 ||
+      document.documentElement.scrollTop > 300) {
+      id("btn-back-to-top").classList.remove("hidden");
+    } else {
+      id("btn-back-to-top").classList.add("hidden");
+    }
+  }
+
+  /**
+   * Returns a badge
+   * @param {string} text text content of badge
+   * @param {string} label class label of badge
+   * @returns a badge
+   */
+  function getBadge(text, label) {
+    let badge = gen("span");
+    badge.classList.add("badge");
+    badge.classList.add(label);
+    badge.textContent = text;
+    return badge;
+  }
+
+  // Helper function that adds an event listener asyncronously
+  function add(elem, addr) {
+    elem.addEventListener("click", () => {
+      populateDir(fmt(addr));
+    });
   }
 
   /**
@@ -330,7 +376,7 @@ let root;                            // Root of the explorer
    * Print the error message to the webpage
    */
   Print = (str) => {
-    id("test").textContent += str + "\t";
+    id("test").textContent += (str + "\t");
   }
 
   /**

@@ -90,3 +90,9 @@ main {
   padding: 0 initial 0 0;
   background-color: white;
 }
+
+#btn-back-to-top {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+}
