@@ -18,13 +18,9 @@ const path = require("path");
 const DELAY    = 2000;            // Duration of message
 const HVAL     = 2225039093;      // Hash value of password
 const STR_MAX  = 30;              // Maximum length of title for card
-const SCROLL   = 300;             // Number of pixels scrolled for displaying scroll button
+const SCROLL   = 300;             // Number of pixels required to show scroll button
 const ERR      = "System Error";  // Message to be printed when release
 const DEBUG    = true;            // True if in debug mode
-
-// File
-const ROOT     = path.join(__dirname, "../others/root.txt") // Where root is stored
-const PDF      = path.join(__dirname, "../others/pdf.txt")  // Where the recent PDF is stored
 
 let root;  // Root of the explorer
 
@@ -52,7 +48,7 @@ let root;  // Root of the explorer
     });
 
     // Set the root
-    await setRoot();
+    setRoot();
   }
 
   /**
@@ -60,17 +56,12 @@ let root;  // Root of the explorer
    * If it is not set yet, instruct user to set it up in setting
    */
   async function setRoot() {
-    try {
-      const data = fmt(await fs.readFile(ROOT, "utf-8"));
-
-      if (await isDir(data)) {  // Valid root
-        root = data;
-        populateDir(root);
-      } else {  // Invalid root or not set yet
-        Print("Please set the root in setting");
-      }
-    } catch (err) {
-      Print(DEBUG? err : ERR);
+    let val = getItem("root");
+    if (val !== null && await isDir(fmt(val))) {
+      root = fmt(val);
+      populateDir(root);
+    } else {
+      Print("Please set the root in setting");
     }
   }
 
@@ -94,10 +85,8 @@ let root;  // Root of the explorer
       return;
     }
 
-    // Overwrite old file
-    await fs.writeFile(ROOT, address, {flag: 'w+'}, err => {
-      Print(DEBUG? err : ERR);
-    })
+    // Set the root
+    setItem("root", address);
 
     // Output success message
     id("upd-result").style.color = "green";
@@ -142,8 +131,9 @@ let root;  // Root of the explorer
 
       // Insert the most recent PDF if existed and if this is root
       if (path.dirname(file) === path.dirname(root)) {
-        const pdf = fmt(await fs.readFile(PDF, "utf-8"));
-        if (isPdf(pdf)) {
+        let pdf = getItem("pdf");
+        if (pdf !== null && isPdf(fmt(pdf))) {
+          pdf = fmt(pdf);
           let card = genCard(pdf, path.basename(pdf), true);
           card.addEventListener("click", () => {
             openPdf(pdf);
@@ -184,9 +174,7 @@ let root;  // Root of the explorer
    * @param {string} name filename of pdf
    */
   async function openPdf(name) {
-    await fs.writeFile(PDF, name, {flag: 'w+'}, err => {
-      Print(DEBUG? err : ERR);
-    });
+    setItem("pdf", name);
     shell.openPath(name);
   }
 
@@ -370,6 +358,24 @@ let root;  // Root of the explorer
               (hval << 8) + (hval << 24);
     }
     return (hval >>> 0) === HVAL;
+  }
+
+  /**
+   * Returns item of given key
+   * @param {string} key key of pair
+   * @returns value of given key
+   */
+  function getItem(key) {
+    return window.localStorage.getItem(key);
+  }
+
+  /**
+   * Set the given pair
+   * @param {string} key key of pair
+   * @param {string} value value of pair
+   */
+  function setItem(key, value) {
+    window.localStorage.setItem(key, value);
   }
 
   /**

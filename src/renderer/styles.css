@@ -60,6 +60,7 @@ main {
 .card:hover {
   cursor: pointer;
   transform: scale(1.1);
+  border: 1px solid grey;
 }
 
 .badge {
