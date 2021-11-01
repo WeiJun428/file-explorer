@@ -18,6 +18,7 @@ const path = require("path");
 const DELAY    = 2000;            // Duration of message
 const HVAL     = 2225039093;      // Hash value of password
 const STR_MAX  = 30;              // Maximum length of title for card
+const SCROLL   = 300;             // Number of pixels scrolled for displaying scroll button
 const ERR      = "System Error";  // Message to be printed when release
 const DEBUG    = true;            // True if in debug mode
 
@@ -47,8 +48,7 @@ let root;  // Root of the explorer
 
     // Activate Scroll to Top Button
     id("btn-back-to-top").addEventListener("click", () => {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      window.scrollTo({top: 0, behavior: "smooth"});
     });
 
     // Set the root
@@ -296,8 +296,8 @@ let root;  // Root of the explorer
    * Control the visibility of the scroll-to-top button
    */
   function scrollFunction() {
-    if (document.body.scrollTop > 300 ||
-      document.documentElement.scrollTop > 300) {
+    if (document.body.scrollTop > SCROLL ||
+      document.documentElement.scrollTop > SCROLL) {
       id("btn-back-to-top").classList.remove("hidden");
     } else {
       id("btn-back-to-top").classList.add("hidden");
