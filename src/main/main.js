@@ -44,7 +44,7 @@ function createWindow () {
   win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
-    icon: path.join(__dirname, "../img/logo.png"),
+    icon: path.join(__dirname, "../img/logo.jpg"),
     webPreferences: {
       nodeIntegration: false,
       preload: require.resolve("./preload.js")
