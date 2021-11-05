@@ -32,23 +32,29 @@
     <!--Main Nav bar with Appname and Setting button -->
     <nav  id="main-nav" class="navbar align-items-center" role="navigation">
       <img class="navbar-brand" src="../img/logo.svg">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="setting-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Setting
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="setting-btn">
-          <form class="px-4 py-3">
-            <div class="form-group">
-              <label for="password-input">Password</label>
-              <input type="password" class="form-control" id="password-input">
-            </div>
-            <div class="form-group">
-              <label for="addr-input">Address</label>
-              <input type="text" class="form-control" id="addr-input" placeholder="C:\Users\username\Desktop\Folder">
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <span id="upd-result"></span>
-          </form>
+      <div class="d-flex flex-row">
+        <form class="form-inline">
+          <input id="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        </form>
+        <div class="dropdown">
+          <button class="btn btn-outline-primary dropdown-toggle" type="button" id="setting-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Setting
+          </button>
+          <!-- Dropdown Menu to update the root directory -->
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="setting-btn">
+            <form id="root-form" class="px-4 py-3">
+              <div class="form-group">
+                <label for="password-input">Password</label>
+                <input type="password" class="form-control" id="password-input">
+              </div>
+              <div class="form-group">
+                <label for="addr-input">Address</label>
+                <input type="text" class="form-control" id="addr-input" placeholder="C:\Users\username\Desktop\Folder">
+              </div>
+              <button type="submit" class="btn btn-outline-primary">Update</button>
+              <span id="upd-result"></span>
+            </form>
+          </div>
         </div>
       </div>
     </nav>
@@ -58,6 +64,13 @@
       <nav aria-label="breadcrumb" role="navigation" class="sticky-top">
         <ol class="breadcrumb" id="address"></ol>
       </nav>
+      <!-- Alert Message when the root is not set -->
+      <div class="alert alert-warning alert-dismissible fade show hidden" role="alert">
+        <strong>Welcome to the Browser by educo!</strong> You should first setup the root directory in the setting.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <h1 id="test"></h1>
       <div class="d-flex flex-row container"></div>
       <button type="button" class="btn btn-danger btn-floating btn-lg hidden" id="btn-back-to-top">&#94;</button>

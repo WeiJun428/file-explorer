@@ -33,7 +33,7 @@ footer {
 }
 
 img {
-  max-height: 10vh;
+  max-height: 8vh;
   margin: 0;
 }
 
@@ -63,8 +63,16 @@ main {
   border: 1px solid grey;
 }
 
+.card-subtitle {
+  font-size: 1.3em;
+}
+
+.dropdown-menu-right {
+  opacity: 0.96;
+}
+
 .badge {
-  transform: scale(0.8);
+  margin-right: 0.6em;
 }
 
 .dropdown-menu-right {
@@ -79,6 +87,7 @@ main {
 
 .dropdown {
   z-index: 1031;
+  margin-left: 0.5em;
 }
 
 #upd-result {

@@ -17,6 +17,7 @@ I use HTML, CSS, BootStrap, JavaScript, ElectronJS, NodeJS (fs, path, shell) to 
 1. The most recent PDF that the user opens will be shown on the homepage so that the user does not need to navigate down to the subfolder again.
 2. I add a scroll to top button that appears after some scrolling to help users speed scrolling to the top easily, especially when the folder contains large amount of subfolder and files.
 3. I add a back button in the top navigation bar to help users quickly switch to previous folder.
+4. I add a search bar to allow filter of folder and file names
 
 ## How to install
 1. Prereq: Make sure that you download node.js (at least version 14) and has an IDE (e.g. VS Code)

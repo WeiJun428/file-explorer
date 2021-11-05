@@ -37,7 +37,7 @@ let root;  // Root of the explorer
    */
   async function init() {
     // Activate form update
-    qs("form").addEventListener("submit", (param) => {
+    id("root-form").addEventListener("submit", (param) => {
       param.preventDefault();
       updateRoot();
     });
@@ -47,8 +47,29 @@ let root;  // Root of the explorer
       window.scrollTo({top: 0, behavior: "smooth"});
     });
 
+    id("search").addEventListener("input", updSearch);
+
+    // window.localStorage.removeItem("root");
+
     // Set the root
     setRoot();
+  }
+
+  /**
+   * Controls the visibility of cards depend on the query string.
+   * Only the card contains the key word is shown.
+   * @param {event} e an input event
+   */
+  function updSearch(e) {
+    const query = e.target.value;
+    let cards = qsa(".card");
+    for (let i = 0; i < cards.length; i++) {
+      if (cards[i].id.includes(query)) {
+        cards[i].classList.remove("hidden");
+      } else {
+        cards[i].classList.add("hidden");
+      }
+    }
   }
 
   /**
@@ -61,7 +82,9 @@ let root;  // Root of the explorer
       root = fmt(val);
       populateDir(root);
     } else {
-      Print("Please set the root in setting");
+      // If root is not set, instruct user to set it
+      qs("nav.sticky-top").classList.add("hidden");
+      qs(".alert").classList.remove("hidden");
     }
   }
 
@@ -87,6 +110,9 @@ let root;  // Root of the explorer
 
     // Set the root
     setItem("root", address);
+
+    // Remove the previous saved recent pdf
+    window.localStorage.removeItem("pdf");
 
     // Output success message
     id("upd-result").style.color = "green";
@@ -164,6 +190,7 @@ let root;  // Root of the explorer
       // Update the navigation
       await updateNav(file);
       qs(".container").classList.remove("hidden");
+      id("search").value = "";
     } catch (err) {
       Print(DEBUG? err : ERR);
     }
@@ -251,6 +278,8 @@ let root;  // Root of the explorer
     div2.classList.add("card-body");
     let title = gen("h1");
     title.classList.add("card-title");
+    let text = gen("p");
+    text.classList.add("card-subtitle");
     let badge;
 
     // Format the badge
@@ -265,18 +294,19 @@ let root;  // Root of the explorer
     if (header.length > STR_MAX) {
       header = header.substr(0, STR_MAX) + "...";
     }
-    header += " ";
     title.textContent = header;
 
-    title.appendChild(badge);
+    text.appendChild(badge);
 
     // Add extra badge if it is most recent
     if (isRecent) {
-      title.appendChild(getBadge("Recent", "badge-success"));
+      text.appendChild(getBadge("Recent", "badge-success"));
     }
 
     div2.appendChild(title);
+    div2.appendChild(text);
     div1.appendChild(div2);
+    div1.id = filename;
     return div1;
   }
 
@@ -401,6 +431,15 @@ let root;  // Root of the explorer
   */
   function qs(selector) {
     return document.querySelector(selector);
+  }
+
+  /**
+   * Returns the array of elements that match the given CSS selector.
+   * @param {string} selector - CSS query selector
+   * @returns {object[]} array of DOM objects matching the query.
+   */
+   function qsa(selector) {
+    return document.querySelectorAll(selector);
   }
 
   /**
