@@ -6,7 +6,7 @@
  */
 
 /**
- * This is preload.js.
+ * This is preload.js. It includes most of the functionalities of this app.
  */
 
 // Dependencies
@@ -47,9 +47,8 @@ let root;  // Root of the explorer
       window.scrollTo({top: 0, behavior: "smooth"});
     });
 
+    // Activate searchbar
     id("search").addEventListener("input", updSearch);
-
-    // window.localStorage.removeItem("root");
 
     // Set the root
     setRoot();
