@@ -60,13 +60,17 @@ let root;  // Root of the explorer
    * @param {event} e an input event
    */
   function updSearch(e) {
-    const query = e.target.value;
+    // Use Regex to format the query
+    const query = e.target.value.toLowerCase().match(/[^ ]+/g);
     let cards = qsa(".card");
     for (let i = 0; i < cards.length; i++) {
-      if (cards[i].id.includes(query)) {
-        cards[i].classList.remove("hidden");
-      } else {
-        cards[i].classList.add("hidden");
+      cards[i].classList.remove("hidden");
+      if (query === null) continue;
+      for (let j = 0; j < query.length; j++) {
+        if (!cards[i].id.toLowerCase().includes(query[j])) {
+          cards[i].classList.add("hidden");
+          break;
+        }
       }
     }
   }
@@ -83,7 +87,7 @@ let root;  // Root of the explorer
     } else {
       // If root is not set, instruct user to set it
       qs("nav.sticky-top").classList.add("hidden");
-      qs(".alert").classList.remove("hidden");
+      qs(".alert-warning").classList.remove("hidden");
     }
   }
 
@@ -97,13 +101,13 @@ let root;  // Root of the explorer
 
     // Validate Password
     if (!isPassword(password)) {
-      updateRootMessage("Incorrect Password");
+      updateRootMessage("Incorrect Password", false);
       return;
     }
 
     // Validate address
     if (!await isDir(address)) {
-      updateRootMessage("Invalid address");
+      updateRootMessage("Invalid address", false);
       return;
     }
 
@@ -114,8 +118,7 @@ let root;  // Root of the explorer
     window.localStorage.removeItem("pdf");
 
     // Output success message
-    id("upd-result").style.color = "green";
-    updateRootMessage("Success. Reload in 2 seconds");
+    updateRootMessage("Success. Reload in 2 seconds", true);
 
     // Reload the page
     setTimeout(() => {
@@ -127,11 +130,17 @@ let root;  // Root of the explorer
    * Print a message to indicate status of root setting.
    * Message disappeared after DELAY sec
    * @param {string} msg message to be printed
+   * @param {boolean} success true if success
    */
-  function updateRootMessage(msg) {
+  function updateRootMessage(msg, success) {
     id("upd-result").textContent = msg;
+    if (success) {
+      id("upd-result").style.color = "green";
+      qs(".spinner-border").classList.remove("hidden");
+    }
     setTimeout(() => {
       id("upd-result").textContent = "";
+      qs(".spinner-border").classList.add("hidden");
     }, DELAY);
   }
 

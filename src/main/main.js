@@ -11,7 +11,7 @@
 
 "use strict";
 
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 // main window
@@ -54,6 +54,7 @@ function createWindow () {
   win.webContents.on('dom-ready', () => {
     // The window has loaded its contents
     win.show();
+    app.setAccessibilitySupportEnabled(true);
   })
 
   win.loadFile(path.join(__dirname, "../renderer/index.html"));
