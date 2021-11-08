@@ -77,7 +77,42 @@
       <h1 id="test"></h1>
       <div class="d-flex flex-row container"></div>
       <button type="button" class="btn btn-danger btn-floating btn-lg hidden" id="btn-back-to-top">&#94;</button>
-      <footer>&copy; 2021 - WJ</footer>
+      <footer>
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#help">
+          Help
+        </button>
+      </footer>
     </main>
+
+    <div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="helpLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="helpLabel">Browser Help</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              <strong>Browser</strong> is a PDF nagivation tool dedicated to help users to browse and open PDF easily.
+            </p>
+            <p>
+              Using Browser, users can:
+              <ul>
+                <li>Set the address of root folder in setting using predefined password</li>
+                <li>Navigate between folders by clicking link on the top navigation bar</li>
+                <li>Filter folders and files in the current folder using the top search bar</li>
+                <li>Open Folder or PDF by clicking the relative card</li>
+                <li>Use the scroll-to-top button to navigate to the top of fodler easily</li>
+              </ul>
+            </p>
+          </div>
+          <div class="modal-footer">
+            &copy; 2021 - WJ
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
