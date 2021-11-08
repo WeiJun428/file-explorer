@@ -209,13 +209,15 @@ let root;  // Root of the explorer
    * @param {string} name filename of pdf
    */
   async function openPdf(name) {
-    id("pdf-name").textContent = " " + path.basename(name);
-    qs(".alert-success").classList.remove("hidden");
-    setTimeout(() => {
-      qs(".alert-success").classList.add("hidden");
-    }, DELAY);
     setItem("pdf", name);
-    shell.openPath(name);
+    document.body.style.cursor = "wait";
+    shell.openPath(name).then(() => {
+      setTimeout(() => {
+        document.body.style.cursor = "auto";
+      }, DELAY / 2);
+    }).catch((err) => {
+      Print(DEBUG? err : ERR);
+    });
   }
 
   /**

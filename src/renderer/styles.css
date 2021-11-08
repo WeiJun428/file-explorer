@@ -73,16 +73,13 @@ main {
 
 .dropdown-menu-right {
   opacity: 0.96;
+  right: 0;
+  left: auto;
+  min-width: 30vw;
 }
 
 .badge {
   margin-right: 0.6em;
-}
-
-.dropdown-menu-right {
-  right: 0;
-  left: auto;
-  min-width: 30vw;
 }
 
 .active {
@@ -107,6 +104,6 @@ main {
 
 #btn-back-to-top {
   position: fixed;
-  bottom: 2em;
-  right: 2em;
+  bottom: 1.5em;
+  right: 1.5em;
 }
