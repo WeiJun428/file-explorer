@@ -17,7 +17,7 @@ I use HTML, CSS, BootStrap, JavaScript, ElectronJS, NodeJS (fs, path, shell) to 
 ## Extra Features
 
 1. The most recent PDF that the user opens will be shown on the homepage so that the user does not need to navigate down to the subfolder again.
-2. Feel free to suggest one by emailing the [developer](wj428@uw.edu)
+2. Feel free to suggest one by emailing the [developer](mailto:wj428@uw.edu)
 
 ## How to install
 1. Prereq: Make sure that you download node.js (at least version 14) and has an IDE (e.g. VS Code)
