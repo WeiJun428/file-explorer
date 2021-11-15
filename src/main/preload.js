@@ -16,11 +16,12 @@ const path = require("path");
 
 // Global variables
 const DELAY    = 2000;            // Duration of message
-const HVAL     = 2225039093;      // Hash value of password
+const HVAL     = 2831125729;      // Hash value of password
 const STR_MAX  = 30;              // Maximum length of title for card
 const SCROLL   = 300;             // Number of pixels required to show scroll button
 const ERR      = "System Error";  // Message to be printed when release
 const DEBUG    = true;            // True if in debug mode
+const RESET    = false;            // True if want to reset the root
 
 let root;  // Root of the explorer
 
@@ -49,6 +50,11 @@ let root;  // Root of the explorer
 
     // Activate searchbar
     id("search").addEventListener("input", updSearch);
+
+    if (RESET) {
+      window.localStorage.removeItem("root");
+      window.localStorage.removeItem("pdf");
+    }
 
     // Set the root
     setRoot();
