@@ -44,6 +44,7 @@ function createWindow () {
   win = new BrowserWindow({
     show: false,
     autoHideMenuBar: true,
+    title: "Educo Directory System",
     icon: path.join(__dirname, "../img/logo.jpeg"),
     webPreferences: {
       nodeIntegration: false,

@@ -7,13 +7,13 @@
 
 <!DOCTYPE html>
 <!--
-  This is a file explorer.
+  This is a directory system made for educo.
 -->
 <html lang="en">
   <head>
     <!-- Metadata -->
     <meta charset="utf-8">
-    <meta name="description" content="This browser provides users a solution to simplified UI of textbook[PDF] Navigation">
+    <meta name="description" content="This directory system provides users a solution to simplified UI of textbook[PDF] Navigation">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="bootstrap.min.css">
@@ -25,13 +25,16 @@
     <script src="bootstrap.min.js"></script>
 
     <!-- Title and Icon  -->
-    <title>Browser</title>
+    <title>Educo Directory System</title>
   </head>
 
   <body>
     <!--Main Nav bar with Appname and Setting button -->
     <nav  id="main-nav" class="navbar align-items-center" role="navigation">
-      <img class="navbar-brand" src="../img/logo.svg">
+      <div class="d-flex flex-col align-items-end">
+        <img class="navbar-brand" src="../img/logo.svg">
+        <h1>Directory System</h1>
+      </div>
       <div class="d-flex flex-row">
         <form class="form-inline">
           <input id="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -69,12 +72,12 @@
       </nav>
       <!-- Alert Message when the root is not set -->
       <div class="alert alert-warning alert-dismissible fade show hidden" role="alert">
-        <strong>Welcome to the Browser by educo!</strong> You should first setup the root directory in the setting.
+        <strong>Welcome to the Educo Directory System!</strong> Please setup the root directory in the setting.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <h1 id="test"></h1>
+      <h2 id="test"></h2>
       <div class="d-flex flex-row container"></div>
       <footer>
         <button type="button" class="btn btn-link" data-toggle="modal" data-target="#help">
@@ -83,22 +86,26 @@
       </footer>
     </main>
 
+    <div class="d-flex justify-content-center align-items-center" id="logo-container">
+      <img id="logo" class="hidden" src="../img/logo.svg">
+    </div>
+
     <button type="button" class="btn btn-primary btn-floating btn-lg hidden" id="btn-back-to-top">&#94;</button>
     <div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="helpLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title" id="helpLabel">Browser Help</h2>
+            <h2 class="modal-title" id="helpLabel">System Help</h2>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <p>
-              <strong>Browser</strong> is a PDF nagivation tool dedicated to help users to browse and open PDF easily.
+              <strong>Educo Directory System</strong> is a PDF nagivation tool dedicated to help users to browse and open PDF easily.
             </p>
             <p>
-              Using Browser, users can:
+              Using this application, users can:
               <ul>
                 <li>Set the address of root folder in setting using predefined password</li>
                 <li>Navigate between folders by clicking link on the top navigation bar</li>
@@ -109,7 +116,7 @@
             </p>
           </div>
           <div class="modal-footer">
-            &copy; 2021 Browser v1.0.3 - WJ
+            &copy; 2021 EDS 1.0.3 - WJ
           </div>
         </div>
       </div>

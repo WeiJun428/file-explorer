@@ -1,9 +1,9 @@
-# Browser
+# Educo Directory System
 
 ## Introduction
-Browser is a PDF nagivation tool dedicated to help users to browse and open PDF easily.
+Educo Directory System is a PDF nagivation tool dedicated to help users to browse and open PDF easily.
 
-Using Browser, users can:
+Using this application, users can:
 
 - Set the address of root folder in setting using predefined password
 - Navigate between folders by clicking link on the top navigation bar

@@ -20,7 +20,7 @@ const HVAL     = 2831125729;      // Hash value of password
 const STR_MAX  = 30;              // Maximum length of title for card
 const SCROLL   = 300;             // Number of pixels required to show scroll button
 const ERR      = "System Error";  // Message to be printed when release
-const DEBUG    = true;            // True if in debug mode
+const DEBUG    = false;            // True if in debug mode
 const RESET    = false;            // True if want to reset the root
 
 let root;  // Root of the explorer
@@ -94,6 +94,7 @@ let root;  // Root of the explorer
       // If root is not set, instruct user to set it
       qs("nav.sticky-top").classList.add("hidden");
       qs(".alert-warning").classList.remove("hidden");
+      id("logo").classList.remove("hidden");
     }
   }
 
@@ -297,7 +298,7 @@ let root;  // Root of the explorer
     div1.classList.add("card");
     let div2 = gen("div");
     div2.classList.add("card-body");
-    let title = gen("h1");
+    let title = gen("h2");
     title.classList.add("card-title");
     let text = gen("p");
     text.classList.add("card-subtitle");
@@ -306,6 +307,7 @@ let root;  // Root of the explorer
     // Format the badge
     if (path.extname(filename) === ".pdf") {
       badge = getBadge("PDF", "badge-primary");
+      title.classList.add("pdf");
     } else {
       badge = getBadge("Folder", "badge-secondary");
     }
